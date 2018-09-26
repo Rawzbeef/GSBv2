@@ -205,8 +205,7 @@ class PdoGsb{
 		$dernierMois = $this->dernierMoisSaisi($idVisiteur);
 		$laDerniereFiche = $this->getLesInfosFicheFrais($idVisiteur,$dernierMois);
 		if($laDerniereFiche['idEtat']=='CR'){
-				$this->majEtatFicheFrais($idVisiteur, $dernierMois,'CL');
-				
+				$this->majEtatFicheFrais($idVisiteur, $dernierMois,'CL');	
 		}
 		$req = "insert into fichefrais(idvisiteur,mois,nbJustificatifs,montantValide,dateModif,idEtat) 
 		values('$idVisiteur','$mois',0,0,now(),'CR')";
@@ -251,7 +250,7 @@ class PdoGsb{
  * @return un tableau associatif de clé un mois -aaaamm- et de valeurs l'année et le mois correspondant 
 */
 	public function getLesMoisDisponibles($idVisiteur){
-		$req = "SELECT DISTINCT F.mois AS mois
+		$req = "SELECT DISTINCT L.mois AS mois
 		FROM fichefrais F, lignefraisforfait L
 		WHERE F.idvisiteur = L.idvisiteur
 		AND F.idvisiteur =  '$idVisiteur'
@@ -321,16 +320,9 @@ class PdoGsb{
 		
 	}
 
-	public function aCloturer() {
-		$req = "SELECT mois 
-		FROM fichefrais 
-		WHERE id = '$idVisiteur'
-		AND idEtat = 'CR'";
-		$res = PdoGsb::$monPdo->query($req);
-		$laLigne = $res->fetch();
-
+	public function estACloturer($mois) {
 		//Annee et mois de la fiche frais
-		$moisFichefrais = $laLigne['mois'];
+		$moisFichefrais = $mois;
 		$numAnneeFF = substr($moisFichefrais, 0, 4);
 		$numMoisFF = substr($moisFichefrais, 4, 2);
 
@@ -339,6 +331,8 @@ class PdoGsb{
 		$numJour = substr($dateActuelle, 0, 2);
 		$numAnnee = substr($dateActuelle, 2, 4);
 		$numMois = substr($dateActuelle, 6, 2);
+
+		//Si on est avant le 10 du prochain mois : false
 		$bool = false;
 		if($numMoisFF == 12 && $numAnnee == $numAnneeFF+1) {
 			if($numMois > 1) {
@@ -356,5 +350,19 @@ class PdoGsb{
 		}
 		return $bool;
 	}
+
+	public function autoCloturation() {
+		$req = "SELECT idVisiteur as id, mois 
+		FROM fichefrais 
+		WHERE idEtat = 'CR'";
+
+		foreach(PdoGsb::$monPdo->query($req) as $laLigne) {
+			if($this->estACloturer($laLigne['mois'])) {
+				$this->majEtatFicheFrais($laLigne['id'], $laLigne['mois'],'CL');
+			}
+		}
+	}
+
+
 }
 ?>

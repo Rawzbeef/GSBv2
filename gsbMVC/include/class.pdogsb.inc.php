@@ -320,5 +320,41 @@ class PdoGsb{
 		$res = pdoGsb::$monPdo->query($req);
 		
 	}
+
+	public function aCloturer() {
+		$req = "SELECT mois 
+		FROM fichefrais 
+		WHERE id = '$idVisiteur'
+		AND idEtat = 'CR'";
+		$res = PdoGsb::$monPdo->query($req);
+		$laLigne = $res->fetch();
+
+		//Annee et mois de la fiche frais
+		$moisFichefrais = $laLigne['mois'];
+		$numAnneeFF = substr($moisFichefrais, 0, 4);
+		$numMoisFF = substr($moisFichefrais, 4, 2);
+
+		//Jour, anne et mois actuel
+		$dateActuelle = getJour(date("d/m/Y")).getMois(date("d/m/Y"));
+		$numJour = substr($dateActuelle, 0, 2);
+		$numAnnee = substr($dateActuelle, 2, 4);
+		$numMois = substr($dateActuelle, 6, 2);
+		$bool = false;
+		if($numMoisFF == 12 && $numAnnee == $numAnneeFF+1) {
+			if($numMois > 1) {
+				$bool = true;
+			}
+			else if($numJour > 10) {
+				$bool = true;
+			}
+		}
+		else if($numAnnee > $numAnneeFF) {
+			$bool = true;
+		}
+		else if($numMois > $numMoisFF && $numJour > 10) {
+			$bool = true;
+		}
+		return $bool;
+	}
 }
 ?>

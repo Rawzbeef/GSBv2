@@ -286,7 +286,7 @@ class PdoGsb{
 						FROM fichefrais F, lignefraisforfait L
 						WHERE F.idvisiteur = L.idvisiteur
 						AND quantite = 0
-						OR idEtat = 'CB')
+						OR idEtat = 'RB')
 		ORDER BY F.mois DESC";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesMois =array();

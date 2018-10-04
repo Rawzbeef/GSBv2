@@ -28,7 +28,7 @@ switch($action){
 			else {
 				include("vues/v_sommaire_C.php");
 			}
-			$pdo->autoCloturation();
+			
 		}
 		break;
 	}

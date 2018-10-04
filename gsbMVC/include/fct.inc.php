@@ -66,20 +66,6 @@ function getMois($date){
 		return $annee.$mois;
 }
 
-/**
- * retourne le jour au format jj selon le jour dans le mois
- 
- * @param $date au format jj/mm/aaaa
- * @return le jour au format jj
-*/
-function getJour($date){
-	@list($jour,$mois,$annee) = explode('/',$date);
-	if(strlen($jour) == 1){
-		$jour = "0".$jour;
-	}
-	return $jour;
-}
-
 /* gestion des erreurs*/
 /**
  * Indique si une valeur est un entier positif ou nul

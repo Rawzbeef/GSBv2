@@ -307,18 +307,7 @@ class PdoGsb{
 		$laLigne = $res->fetch();
 		return $laLigne['statut'];
 	}
-/**
- * Retourne le nom et le prénom des visiteurs qui ont une fiche de frais pour un mois donné
 
- * @param $mois sous la forme aaaamm
- * @return un tableau avec des champs de visiteur
- */
-	
-	public function getLesVisiteurs($mois) {
-		$req = "SELECT nom, prenom FROM Employe, ficheFrais WHERE Employe.idVisiteur = ficheFrais.idVisiteur AND ficheFrais.mois = '$mois'";
-		$res = pdoGsb::$monPdo->query($req);
-		
-	}
 
 	public function estACloturer($mois) {
 		//Annee et mois de la fiche frais
@@ -390,6 +379,4 @@ class PdoGsb{
 	}
 }
 
-
-}
 ?>

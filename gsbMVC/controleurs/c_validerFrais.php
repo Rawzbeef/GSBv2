@@ -23,6 +23,7 @@ switch($action){
 	}
 	case 'choixVisiteur':{
 		$leMois = $_REQUEST['lstMois'];
+		$_SESSION['mois'] = $leMois;
 		$lesMois=$pdo->getLesMoisDisponiblesComptable();
 		$moisASelectionner = $leMois;
 		include("vues/v_listeMoisComptable.php");
@@ -34,7 +35,7 @@ switch($action){
 	}
 	
 	case 'voirFicheAValider':{
-		$leMois = $_REQUEST['lstMois'];
+		$leMois = $_SESSION['mois'];
 		$lesMois=$pdo->getLesMoisDisponiblesComptable();
 		$moisASelectionner = $leMois;
 		include("vues/v_listeMoisComptable.php");

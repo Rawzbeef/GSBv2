@@ -272,6 +272,38 @@ class PdoGsb{
 		}
 		return $lesMois;
 	}
+	
+/**
+ * Retourne les mois qui pour lesquels les fiches de frais sont remplies et ne sont pas encore remboursées
+ 
+ * @return un tableau associatif de clé un mois -aaaamm- et de valeurs l'année et le mois correspondant 
+*/
+	public function getLesMoisDisponiblesComptable(){
+		$req = "SELECT DISTINCT L.mois AS mois
+		FROM fichefrais F, lignefraisforfait L
+		WHERE F.idvisiteur = L.idvisiteur
+		AND L.mois NOT IN (SELECT DISTINCT L.mois 
+						FROM fichefrais F, lignefraisforfait L
+						WHERE F.idvisiteur = L.idvisiteur
+						AND quantite = 0
+						OR idEtat = 'CB')
+		ORDER BY F.mois DESC";
+		$res = PdoGsb::$monPdo->query($req);
+		$lesMois =array();
+		$laLigne = $res->fetch();
+		while($laLigne != null)	{
+			$mois = $laLigne['mois'];
+			$numAnnee =substr( $mois,0,4);
+			$numMois =substr( $mois,4,2);
+			$lesMois["$mois"]=array(
+		    "mois"=>"$mois",
+		    "numAnnee"  => "$numAnnee",
+			"numMois"  => "$numMois"
+             );
+			$laLigne = $res->fetch(); 		
+		}
+		return $lesMois;
+	}	
 /**
  * Retourne les informations d'une fiche de frais d'un visiteur pour un mois donné
  

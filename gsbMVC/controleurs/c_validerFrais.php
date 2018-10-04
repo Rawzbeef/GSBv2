@@ -12,9 +12,21 @@ else {
 $mois = getMois(date("d/m/Y"));
 $numAnnee =substr( $mois,0,4);
 $numMois =substr( $mois,4,2);
+
 switch($action){
+	case 'selectionnerMois':{
+		$lesMois=$pdo->getLesMoisDisponiblesComptable();
+		$lesCles = array_keys($lesMois);
+		$moisASelectionner = $lesCles[0];
+		include("vues/v_listeMoisComptable.php");
+		break;
+	}
 	case 'choixVisiteur':{
-		$lesVisiteurs=$pdo->getLesVisiteurs($mois);
+		$leMois = $_REQUEST['lstMois'];
+		$lesMois=$pdo->getLesMoisDisponiblesComptable();
+		$moisASelectionner = $leMois;
+		include("vues/v_listeMoisComptable.php");
+		$lesVisiteurs=$pdo->getLesVisiteurs($leMois);
 		$lesCles = array_keys($lesVisiteurs);
 		$visiteurASelectionner = $lesCles[0];
 		include("vues/v_listeVisiteurs.php");
@@ -22,10 +34,16 @@ switch($action){
 	}
 	
 	case 'voirFicheAValider':{
+		$leMois = $_REQUEST['lstMois'];
+		$lesMois=$pdo->getLesMoisDisponiblesComptable();
+		$moisASelectionner = $leMois;
+		include("vues/v_listeMoisComptable.php");
 		$leVisiteur = $_REQUEST['lstVisiteur'];
-		$lesVisiteurs=$pdo->getLesVisiteurs($mois);
+		$lesVisiteurs=$pdo->getLesVisiteurs($leMois);
 		$visiteurASelectionner = $leVisiteur;
 		include("vues/v_listeVisiteurs.php");
+		
+		break;
 		
 	}
 	

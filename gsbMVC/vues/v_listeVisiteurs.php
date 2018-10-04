@@ -1,5 +1,4 @@
-<div id="contenu">
-	<h2>Mes fiches de frais</h2>
+<div>
 	<h3>Visiteur à sélectionner : </h3>
 	<form action="index.php?uc=validerFrais&action=voirFicheAValider" method="post">
 		<div class="corpsForm">
@@ -27,15 +26,11 @@
 					?>    
 				</select>
 			</p>
-			<p>
-				<label for="leMois">Mois : </label>
-				<input type="text" value="<?php echo $numMois."/".$numAnnee; ?>" disabled="disabled"></input>
-			</p>
 		</div>
 		<div class="piedForm">
 			<p>
 				<input id="ok" type="submit" value="Valider" size="20" />
-				<input id="annuler" type="reset" value="Effacer" size="20" />
+				<input id="annuler" type="reset" value="Annuler" size="20" />
 			</p> 
 		</div>
 

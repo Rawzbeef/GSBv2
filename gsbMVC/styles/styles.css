@@ -8,7 +8,6 @@ body{
   font-family:"Trebuchet MS",Verdana,Geneva,Arial,Helvetica,sans-serif;
   font-size:0.8em;
 }
-
 #page {
   background-color:white;
   width : 65%;
@@ -294,10 +293,4 @@ table.listeLegere th.libelle{
   height : 28px;
   float : left;
 
-}
-
-/* Style pour la page de validation des frais */
-
-.bgValidation {
-	background-color:#EE8844;
 }

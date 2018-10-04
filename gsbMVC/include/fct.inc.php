@@ -60,6 +60,28 @@ function dateAnglaisVersFrancais($maDate){
 */
 function getMois($date){
 		@list($jour,$mois,$annee) = explode('/',$date);
+		$bool = false;
+		$dateFichefrais = $dateFF;
+		$numAnneeFF = substr($dateFichefrais, 0, 4);
+		$numMoisFF = substr($dateFichefrais, 4, 2);
+		if($mois == 12 && $annee == $numAnneeFF+1) {
+			if($mois > 1) {
+				$bool = true;
+			}
+			else if($jour > 10) {
+				$bool = true;
+			}
+			else {
+				
+			}
+		}
+		else if($annee > $numAnneeFF) {
+			$bool = true;
+		}
+		else if($mois > $numMoisFF && $numJour > 10) {
+			$bool = true;
+		}
+
 		if(strlen($mois) == 1){
 			$mois = "0".$mois;
 		}

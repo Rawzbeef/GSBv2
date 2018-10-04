@@ -14,11 +14,11 @@
 		{
 			$libelle = $unFraisHorsForfait['libelle'];
 			$date = $unFraisHorsForfait['date'];
-			$montant=$unFraisHorsForfait['montant'];
+			$montant = $unFraisHorsForfait['montant'];
 			$id = $unFraisHorsForfait['id'];
 	?>		
             <tr>
-                <td> <?php echo $date ?></td>
+                <td><?php echo $date ?></td>
                 <td><?php echo $libelle ?></td>
                 <td><?php echo $montant ?></td>
                 <td><a href="index.php?uc=gererFrais&action=supprimerFrais&idFrais=<?php echo $id ?>" 
@@ -42,7 +42,7 @@
             </p>
             <p>
               <label for="txtLibelleHF">Libellé</label>
-              <input type="text" id="txtLibelleHF" name="libelle" size="70" maxlength="256" value="" />
+              <input type="text" id="txtLibelleHF" name="libelle" size="20" maxlength="256" value="" />
             </p>
             <p>
               <label for="txtMontantHF">Montant : </label>

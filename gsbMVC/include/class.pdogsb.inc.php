@@ -362,6 +362,33 @@ class PdoGsb{
 			}
 		}
 	}
+		
+	/**
+	* Retourne l'id, le nom et le prénom des visiteurs qui ont une fiche de frais pour un mois donné
+
+	* @param $mois sous la forme aaaamm
+	* @return un tableau contenant les champs des visiteur
+	*/
+	
+	public function getLesVisiteurs($mois) {
+		$req = "SELECT id, nom, prenom FROM Employe, ficheFrais WHERE Employe.id = ficheFrais.idVisiteur AND ficheFrais.mois = '$mois'";
+		$res = PdoGsb::$monPdo->query($req);
+		$lesVisiteurs = array();
+		$laLigne = $res->fetch();
+		while($laLigne != null)	{
+			$id = $laLigne['id'];
+			$nom = $laLigne['nom'];
+			$prenom = $laLigne['prenom'];
+			$lesVisiteurs["$id"]=array(
+		    "id"=>"$id",
+		    "nom"  => "$nom",
+			"prenom"  => "$prenom"
+             );
+			$laLigne = $res->fetch(); 		
+		}
+		return $lesVisiteurs;
+	}
+}
 
 
 }

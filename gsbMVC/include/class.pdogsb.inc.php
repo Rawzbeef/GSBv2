@@ -279,7 +279,7 @@ class PdoGsb{
  * @param $idFrais 
 */
 	public function supprimerFraisHorsForfait($idFrais){
-		$req = "delete from lignefraishorsforfait where lignefraishorsforfait.id =$idFrais ";
+		$req = "delete from lignefraishorsforfait where lignefraishorsforfait.id = ? ";
 		$st = PdoGsb::$monPdo->prepare($req);
 		$st->bindParam(1, $idFrais);
 		$st->execute();
@@ -294,12 +294,14 @@ class PdoGsb{
 		$req = "SELECT DISTINCT L.mois AS mois
 		FROM fichefrais F, lignefraisforfait L
 		WHERE F.idvisiteur = L.idvisiteur
-		AND F.idvisiteur =  '$idVisiteur'
+		AND F.idvisiteur =  ?
 		AND quantite > 0
 		ORDER BY F.mois DESC ";
-		$res = PdoGsb::$monPdo->query($req);
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->execute();
 		$lesMois =array();
-		$laLigne = $res->fetch();
+		$laLigne = $st->fetch();
 		while($laLigne != null)	{
 			$mois = $laLigne['mois'];
 			$numAnnee =substr( $mois,0,4);
@@ -309,7 +311,7 @@ class PdoGsb{
 		    "numAnnee"  => "$numAnnee",
 			"numMois"  => "$numMois"
              );
-			$laLigne = $res->fetch(); 		
+			$laLigne = $st->fetch(); 		
 		}
 		return $lesMois;
 	}

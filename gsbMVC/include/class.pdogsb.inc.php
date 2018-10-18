@@ -231,7 +231,7 @@ class PdoGsb{
 		$dernierMois = $this->dernierMoisSaisi($idVisiteur);
 		$laDerniereFiche = $this->getLesInfosFicheFrais($idVisiteur,$dernierMois);
 		if($laDerniereFiche['idEtat']=='CR'){
-				$this->majEtatFicheFrais(?, ?,'CL');	
+				$this->majEtatFicheFrais($idVisiteur, $dernierMois,'CL');	
 		}
 		$req = "insert into fichefrais(idvisiteur,mois,nbJustificatifs,montantValide,dateModif,idEtat) 
 		values(?,?,0,0,now(),'CR')";
@@ -359,8 +359,8 @@ class PdoGsb{
 		$st = PdoGsb::$monPdo->prepare($req);
 		$st->bindParam(1, $idVisiteur);
 		$st->bindParam(2, $mois);
-		$res = $st->execute();
-		$laLigne = $res->fetch();
+		$st->execute();
+		$laLigne = $st->fetch();
 		return $laLigne;
 	}
 /**

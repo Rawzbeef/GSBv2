@@ -464,11 +464,19 @@ class PdoGsb{
 		return $lesVisiteurs;
 	}
 	
-	/*
-	public function getLesFichesMoisPrecedent($date) {
-		//$req = "SELECT id,";
-		$dateMoisPrecedent = $numAnnee.$numMois;
+	public function getLesFichesMoisPrecedent($idVisiteur, $mois) {
+		$req = "SELECT ficheFrais.idEtat as idEtat, ficheFrais.dateModif as dateModif, ficheFrais.nbJustificatifs as nbJustificatifs, 
+			ficheFrais.montantValide as montantValide, etat.libelle as libEtat 
+			FROM  fichefrais inner join Etat on ficheFrais.idEtat = Etat.id 
+			WHERE fichefrais.idvisiteur = ? 
+			AND fichefrais.mois = ?
+			AND fichefrais.idEtat != 'CR'";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$st->execute();
+		$laLigne = $st->fetch();
+		return $laLigne;
 	}
-	*/
 }
 ?> 

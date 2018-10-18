@@ -61,7 +61,7 @@ function dateAnglaisVersFrancais($maDate){
 function getMois($date){
 		@list($jour,$mois,$annee) = explode('/',$date);
 		$bool = false;
-		$dateFichefrais = $dateFF;
+		$dateFichefrais = $date;
 		$numAnneeFF = substr($dateFichefrais, 0, 4);
 		$numMoisFF = substr($dateFichefrais, 4, 2);
 		if($mois == 12 && $annee == $numAnneeFF+1) {

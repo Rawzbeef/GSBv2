@@ -409,6 +409,10 @@ class PdoGsb{
 		}
 		return $lesVisiteurs;
 	}
+	
+	public function getLesFichesMoisPrecedent($date) {
+		$req = 
+	}
 }
 
 ?>

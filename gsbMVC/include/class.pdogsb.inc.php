@@ -344,7 +344,8 @@ class PdoGsb{
 		$req = "SELECT statut FROM Employe WHERE id = ?";
 		$st = PdoGsb::$monPdo->prepare($req);
 		$st->bindParam(1, $idVisiteur);
-		$laLigne = $st->execute();
+		$st->execute();
+		$laLigne = $st->fetch();
 		return $laLigne['statut'];
 	}
 
@@ -400,12 +401,12 @@ class PdoGsb{
 	*/
 	
 	public function getLesVisiteurs($mois) {
-		$req = "SELECT id, nom, prenom FROM Employe, ficheFrais WHERE Employe.id = ficheFrais.idVisiteur AND ficheFrais.mois = ?";
+		$req = "SELECT id, nom, prenom FROM Employe, ficheFrais WHERE Employe.id = ficheFrais.idVisiteur AND ficheFrais.mois =?";
 		$st = PdoGsb::$monPdo->prepare($req);
 		$st->bindParam(1, $mois);
-		$res = $st->execute();
+		$st->execute();
 		$lesVisiteurs = array();
-		$laLigne = $res->fetch();
+		$laLigne = $st->fetch();
 		while($laLigne != null)	{
 			$id = $laLigne['id'];
 			$nom = $laLigne['nom'];
@@ -415,14 +416,18 @@ class PdoGsb{
 		    "nom"  => "$nom",
 			"prenom"  => "$prenom"
              );
-			$laLigne = $res->fetch(); 		
+			$laLigne = $st->fetch(); 		
 		}
 		return $lesVisiteurs;
 	}
 	
+	
 	public function getLesFichesMoisPrecedent($date) {
-		$req = 
+		//$req = "SELECT id,";
+		$dateMoisPrecedent = $numAnnee.$numMois;
 	}
 }
-
-?>
+	/* $req = "select ficheFrais.idEtat as idEtat, ficheFrais.dateModif as dateModif, ficheFrais.nbJustificatifs as nbJustificatifs, 
+			ficheFrais.montantValide as montantValide, etat.libelle as libEtat from  fichefrais inner join Etat on ficheFrais.idEtat = Etat.id 
+			where fichefrais.idvisiteur = ? and fichefrais.mois = ?"; */
+?> 

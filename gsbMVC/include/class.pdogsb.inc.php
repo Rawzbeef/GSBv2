@@ -314,8 +314,11 @@ class PdoGsb{
 	public function getLesInfosFicheFrais($idVisiteur,$mois){
 		$req = "select ficheFrais.idEtat as idEtat, ficheFrais.dateModif as dateModif, ficheFrais.nbJustificatifs as nbJustificatifs, 
 			ficheFrais.montantValide as montantValide, etat.libelle as libEtat from  fichefrais inner join Etat on ficheFrais.idEtat = Etat.id 
-			where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
-		$res = PdoGsb::$monPdo->query($req);
+			where fichefrais.idvisiteur = ? and fichefrais.mois = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$res = $st->execute();
 		$laLigne = $res->fetch();
 		return $laLigne;
 	}
@@ -328,15 +331,20 @@ class PdoGsb{
  */
  
 	public function majEtatFicheFrais($idVisiteur,$mois,$etat){
-		$req = "update ficheFrais set idEtat = '$etat', dateModif = now() 
-		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
-		PdoGsb::$monPdo->exec($req);
+		$req = "update ficheFrais set idEtat = ?, dateModif = now() 
+		where fichefrais.idvisiteur = ? and fichefrais.mois = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $etat);
+		$st->bindParam(2, $idVisiteur);
+		$st->bindParam(3, $mois);
+		$st->execute();
 	}
 
 	public function getStatut($idVisiteur){
-		$req = "SELECT statut FROM Employe WHERE id = '$idVisiteur'";
-		$res = PdoGsb::$monPdo->query($req);
-		$laLigne = $res->fetch();
+		$req = "SELECT statut FROM Employe WHERE id = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$laLigne = $st->execute();
 		return $laLigne['statut'];
 	}
 
@@ -392,8 +400,10 @@ class PdoGsb{
 	*/
 	
 	public function getLesVisiteurs($mois) {
-		$req = "SELECT id, nom, prenom FROM Employe, ficheFrais WHERE Employe.id = ficheFrais.idVisiteur AND ficheFrais.mois = '$mois'";
-		$res = PdoGsb::$monPdo->query($req);
+		$req = "SELECT id, nom, prenom FROM Employe, ficheFrais WHERE Employe.id = ficheFrais.idVisiteur AND ficheFrais.mois = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $mois);
+		$res = $st->execute();
 		$lesVisiteurs = array();
 		$laLigne = $res->fetch();
 		while($laLigne != null)	{

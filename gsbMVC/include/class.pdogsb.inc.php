@@ -55,9 +55,12 @@ class PdoGsb{
 */
 	public function getInfosVisiteur($login, $mdp){
 		$req = "select Employe.id as id, Employe.nom as nom, Employe.prenom as prenom from Employe 
-		where Employe.login='$login' and Employe.mdp='$mdp'";
-		$rs = PdoGsb::$monPdo->query($req);
-		$ligne = $rs->fetch();
+		where Employe.login = ? and Employe.mdp = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $login);
+		$st->bindParam(2, $mdp);
+		$st->execute();
+		$ligne = $st->fetch();
 		return $ligne;
 	}
 
@@ -73,14 +76,17 @@ class PdoGsb{
  * @return tous les champs des lignes de frais hors forfait sous la forme d'un tableau associatif 
 */
 	public function getLesFraisHorsForfait($idVisiteur,$mois){
-	    $req = "select * from lignefraishorsforfait where lignefraishorsforfait.idvisiteur ='$idVisiteur' 
-		and lignefraishorsforfait.mois = '$mois' ";	
-		$res = PdoGsb::$monPdo->query($req);
-		$lesLignes = $res->fetchAll();
+	    $req = "select * from lignefraishorsforfait where lignefraishorsforfait.idvisiteur = ? 
+		and lignefraishorsforfait.mois = ? ";	
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$st->execute();
+		$lesLignes = $st->fetchAll();
 		$nbLignes = count($lesLignes);
 		for ($i=0; $i<$nbLignes; $i++){
 			$date = $lesLignes[$i]['date'];
-			$lesLignes[$i]['date'] =  dateAnglaisVersFrancais($date);
+			$lesLignes[$i]['date'] = dateAnglaisVersFrancais($date);
 		}
 		return $lesLignes; 
 	}
@@ -92,9 +98,12 @@ class PdoGsb{
  * @return le nombre entier de justificatifs 
 */
 	public function getNbjustificatifs($idVisiteur, $mois){
-		$req = "select fichefrais.nbjustificatifs as nb from  fichefrais where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
-		$res = PdoGsb::$monPdo->query($req);
-		$laLigne = $res->fetch();
+		$req = "select fichefrais.nbjustificatifs as nb from  fichefrais where fichefrais.idvisiteur = ? and fichefrais.mois = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$st->execute();
+		$laLigne = $st->fetch();
 		return $laLigne['nb'];
 	}
 /**
@@ -109,10 +118,13 @@ class PdoGsb{
 		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, 
 		lignefraisforfait.quantite as quantite from lignefraisforfait inner join fraisforfait 
 		on fraisforfait.id = lignefraisforfait.idfraisforfait
-		where lignefraisforfait.idvisiteur ='$idVisiteur' and lignefraisforfait.mois='$mois' 
+		where lignefraisforfait.idvisiteur = ? and lignefraisforfait.mois= ? 
 		order by lignefraisforfait.idfraisforfait";	
-		$res = PdoGsb::$monPdo->query($req);
-		$lesLignes = $res->fetchAll();
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$st->execute();
+		$lesLignes = $st->fetchAll();
 		return $lesLignes; 
 	}
 /**
@@ -141,10 +153,15 @@ class PdoGsb{
 		$lesCles = array_keys($lesFrais);
 		foreach($lesCles as $unIdFrais){
 			$qte = $lesFrais[$unIdFrais];
-			$req = "update lignefraisforfait set lignefraisforfait.quantite = $qte
-			where lignefraisforfait.idvisiteur = '$idVisiteur' and lignefraisforfait.mois = '$mois'
-			and lignefraisforfait.idfraisforfait = '$unIdFrais'";
-			PdoGsb::$monPdo->exec($req);
+			$req = "update lignefraisforfait set lignefraisforfait.quantite = ?
+			where lignefraisforfait.idvisiteur = ? and lignefraisforfait.mois = ?
+			and lignefraisforfait.idfraisforfait = ?";
+			$st = PdoGsb::$monPdo->prepare($req);
+			$st->bindParam(1, $qte);
+			$st->bindParam(2, $idVisiteur);
+			$st->bindParam(3, $mois);
+			$st->bindParam(4, $unIdFrais);
+			$st->execute();
 		}
 		
 	}
@@ -156,9 +173,13 @@ class PdoGsb{
  * @param $mois sous la forme aaaamm
 */
 	public function majNbJustificatifs($idVisiteur, $mois, $nbJustificatifs){
-		$req = "update fichefrais set nbjustificatifs = $nbJustificatifs 
-		where fichefrais.idvisiteur = '$idVisiteur' and fichefrais.mois = '$mois'";
-		PdoGsb::$monPdo->exec($req);	
+		$req = "update fichefrais set nbjustificatifs = ? 
+		where fichefrais.idvisiteur = ? and fichefrais.mois = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $nbJustificatifs);
+		$st->bindParam(2, $idVisiteur);
+		$st->bindParam(3, $mois);
+		$st->execute();	
 	}
 /**
  * Teste si un visiteur possède une fiche de frais pour le mois passé en argument
@@ -171,9 +192,12 @@ class PdoGsb{
 	{
 		$ok = false;
 		$req = "select count(*) as nblignesfrais from fichefrais 
-		where fichefrais.mois = '$mois' and fichefrais.idvisiteur = '$idVisiteur'";
-		$res = PdoGsb::$monPdo->query($req);
-		$laLigne = $res->fetch();
+		where fichefrais.mois = ? and fichefrais.idvisiteur = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $mois);
+		$st->bindParam(2, $idVisiteur);
+		$st->execute();
+		$laLigne = $st->fetch();
 		if($laLigne['nblignesfrais'] == 0){
 			$ok = true;
 		}
@@ -186,9 +210,11 @@ class PdoGsb{
  * @return le mois sous la forme aaaamm
 */	
 	public function dernierMoisSaisi($idVisiteur){
-		$req = "select max(mois) as dernierMois from fichefrais where fichefrais.idvisiteur = '$idVisiteur'";
-		$res = PdoGsb::$monPdo->query($req);
-		$laLigne = $res->fetch();
+		$req = "select max(mois) as dernierMois from fichefrais where fichefrais.idvisiteur = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->execute();
+		$laLigne = $st->fetch();
 		$dernierMois = $laLigne['dernierMois'];
 		return $dernierMois;
 	}
@@ -205,17 +231,24 @@ class PdoGsb{
 		$dernierMois = $this->dernierMoisSaisi($idVisiteur);
 		$laDerniereFiche = $this->getLesInfosFicheFrais($idVisiteur,$dernierMois);
 		if($laDerniereFiche['idEtat']=='CR'){
-				$this->majEtatFicheFrais($idVisiteur, $dernierMois,'CL');	
+				$this->majEtatFicheFrais(?, ?,'CL');	
 		}
 		$req = "insert into fichefrais(idvisiteur,mois,nbJustificatifs,montantValide,dateModif,idEtat) 
-		values('$idVisiteur','$mois',0,0,now(),'CR')";
-		PdoGsb::$monPdo->exec($req);
+		values(?,?,0,0,now(),'CR')";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$st->execute();
 		$lesIdFrais = $this->getLesIdFrais();
 		foreach($lesIdFrais as $uneLigneIdFrais){
 			$unIdFrais = $uneLigneIdFrais['idfrais'];
 			$req = "insert into lignefraisforfait(idvisiteur,mois,idFraisForfait,quantite) 
-			values('$idVisiteur','$mois','$unIdFrais',0)";
-			PdoGsb::$monPdo->exec($req);
+			values(?,?,?,0)";
+			$st = PdoGsb::$monPdo->prepare($req);
+			$st->bindParam(1, $idVisiteur);
+			$st->bindParam(2, $mois);
+			$st->bindParam(3, $unIdFrais);
+			$st->execute();
 		 }
 	}
 /**
@@ -231,8 +264,14 @@ class PdoGsb{
 	public function creeNouveauFraisHorsForfait($idVisiteur,$mois,$libelle,$date,$montant){
 		$dateFr = dateFrancaisVersAnglais($date);
 		$req = "insert into lignefraishorsforfait 
-		values('','$idVisiteur','$mois','$libelle','$dateFr','$montant')";
-		PdoGsb::$monPdo->exec($req);
+		values('',?,?,?,?,?)";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$st->bindParam(3, $libelle);
+		$st->bindParam(4, $dateFr);
+		$st->bindParam(5, $montant);
+		$st->execute();
 	}
 /**
  * Supprime le frais hors forfait dont l'id est passé en argument
@@ -241,7 +280,9 @@ class PdoGsb{
 */
 	public function supprimerFraisHorsForfait($idFrais){
 		$req = "delete from lignefraishorsforfait where lignefraishorsforfait.id =$idFrais ";
-		PdoGsb::$monPdo->exec($req);
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idFrais);
+		$st->execute();
 	}
 /**
  * Retourne les mois pour lesquel un visiteur a une fiche de frais
@@ -403,7 +444,7 @@ class PdoGsb{
 		$req = "SELECT id, nom, prenom FROM Employe, ficheFrais WHERE Employe.id = ficheFrais.idVisiteur AND ficheFrais.mois = ?";
 		$st = PdoGsb::$monPdo->prepare($req);
 		$st->bindParam(1, $mois);
-		$res = $st->execute();
+		$res = $st->query();
 		$lesVisiteurs = array();
 		$laLigne = $res->fetch();
 		while($laLigne != null)	{
@@ -421,7 +462,7 @@ class PdoGsb{
 	}
 	
 	public function getLesFichesMoisPrecedent($date) {
-		$req = 
+		$req =  1;
 	}
 }
 

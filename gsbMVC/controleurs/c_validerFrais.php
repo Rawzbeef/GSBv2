@@ -43,7 +43,18 @@ switch($action){
 		$lesVisiteurs=$pdo->getLesVisiteurs($leMois);
 		$visiteurASelectionner = $leVisiteur;
 		include("vues/v_listeVisiteurs.php");
-	
+		$idVisiteur = $leVisiteur;
+		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
+		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
+		$lesInfosFicheFrais = $pdo->getLesFichesMoisPrecedent($idVisiteur,$leMois);
+		$numAnnee =substr( $leMois,0,4);
+		$numMois =substr( $leMois,4,2);
+		$libEtat = $lesInfosFicheFrais['libEtat'];
+		$montantValide = $lesInfosFicheFrais['montantValide'];
+		$nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
+		$dateModif =  $lesInfosFicheFrais['dateModif'];
+		$dateModif =  dateAnglaisVersFrancais($dateModif);
+		include("vues/v_etatFraisComptable.php");
 		break;
 		
 	}

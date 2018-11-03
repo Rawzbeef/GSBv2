@@ -418,7 +418,10 @@ class PdoGsb{
 		else if($numAnnee > $numAnneeFF) {
 			$bool = true;
 		}
-		else if($numMois > $numMoisFF && $numJour > 10) {
+		else if($numMois > $numMoisFF) {
+			$bool = true;
+		}
+		else if($numJour > 10) {
 			$bool = true;
 		}
 		return $bool;

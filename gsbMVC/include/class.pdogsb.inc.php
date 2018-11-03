@@ -317,7 +317,7 @@ class PdoGsb{
 	}
 	
 /**
- * Retourne les mois qui pour lesquels les fiches de frais sont remplies et ne sont pas encore remboursées
+ * Retourne les mois qui pour lesquels les fiches de frais sont remplies et ne sont clôturées
  
  * @return un tableau associatif de clé un mois -aaaamm- et de valeurs l'année et le mois correspondant 
 */
@@ -328,9 +328,9 @@ class PdoGsb{
 		AND L.mois NOT IN (SELECT DISTINCT L.mois 
 						FROM fichefrais F, lignefraisforfait L
 						WHERE F.idvisiteur = L.idvisiteur
-						AND quantite = 0
-						OR idEtat = 'RB')
-		ORDER BY F.mois DESC";
+						AND (quantite = 0
+						OR idEtat = 'CR'))
+		ORDER BY mois DESC";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesMois =array();
 		$laLigne = $res->fetch();

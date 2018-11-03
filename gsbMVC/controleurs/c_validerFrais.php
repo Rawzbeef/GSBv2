@@ -16,9 +16,14 @@ $numMois =substr( $mois,4,2);
 switch($action){
 	case 'selectionnerMois':{
 		$lesMois=$pdo->getLesMoisDisponiblesComptable();
-		$lesCles = array_keys($lesMois);
-		$moisASelectionner = $lesCles[0];
-		include("vues/v_listeMoisComptable.php");
+		if(sizeof($lesMois) == 0) {
+			include("vues/v_validationAucuneFiche.php");
+		}
+		else {
+			$lesCles = array_keys($lesMois);
+			$moisASelectionner = $lesCles[0];
+			include("vues/v_listeMoisComptable.php");
+		}
 		break;
 	}
 	case 'choixVisiteur':{

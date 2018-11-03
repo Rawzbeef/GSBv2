@@ -49,6 +49,7 @@ switch($action){
 		$visiteurASelectionner = $leVisiteur;
 		include("vues/v_listeVisiteurs.php");
 		$idVisiteur = $leVisiteur;
+		$_SESSION['visiteur'] = $idVisiteur;
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
 		$lesInfosFicheFrais = $pdo->getLesFichesMoisPrecedent($idVisiteur,$leMois);
@@ -61,9 +62,49 @@ switch($action){
 		$dateModif =  dateAnglaisVersFrancais($dateModif);
 		include("vues/v_etatFraisComptable.php");
 		break;
-		
 	}
 	
+	case 'validerFicheFrais':{
+		$leMois = $_SESSION['mois'];
+		$lesMois=$pdo->getLesMoisDisponiblesComptable();
+		$moisASelectionner = $leMois;
+		include("vues/v_listeMoisComptable.php");
+		$leVisiteur = $_SESSION['visiteur'];
+		$lesVisiteurs=$pdo->getLesVisiteurs($leMois);
+		$visiteurASelectionner = $leVisiteur;
+		include("vues/v_listeVisiteurs.php");
+		// Mise à jour état fiche frais
+		$idEtat = $_REQUEST['lstEtat'];
+		$pdo->majEtatFicheFrais($leVisiteur,$leMois,$idEtat);
+		// Mise à jour refus hors forfait si existant
+		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($leVisiteur,$leMois);
+		$nbHorsForfait = sizeof($lesFraisHorsForfait);
+		$i = 0;
+		foreach ( $lesFraisHorsForfait as $unFraisHorsForfait ) {
+			$i++;
+			$liste = "lstSituation".$i;
+			$idHF = $unFraisHorsForfait['id'];
+			$libHF = $unFraisHorsForfait['libelle'];
+			echo $idHF;
+			echo $libHF;
+			echo $_REQUEST[$liste];
+			if ($_REQUEST[$liste] == "RF") {
+				$pdo->majHorsForfait($idHF, $libHF);
+			}
+		}
+		// Affichage
+		$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);
+		$lesInfosFicheFrais = $pdo->getLesFichesMoisPrecedent($leVisiteur,$leMois);
+		$numAnnee =substr( $leMois,0,4);
+		$numMois =substr( $leMois,4,2);
+		$libEtat = $lesInfosFicheFrais['libEtat'];
+		$montantValide = $lesInfosFicheFrais['montantValide'];
+		$nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
+		$dateModif =  $lesInfosFicheFrais['dateModif'];
+		$dateModif =  dateAnglaisVersFrancais($dateModif);
+		include("vues/v_etatFraisComptable.php");
+		break;
+	}
 }
 
 

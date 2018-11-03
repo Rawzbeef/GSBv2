@@ -317,19 +317,17 @@ class PdoGsb{
 	}
 	
 /**
- * Retourne les mois qui pour lesquels les fiches de frais sont remplies et ne sont clôturées
+ * Retourne les mois qui pour lesquels les fiches de frais sont remplies et sont clôturées
  
  * @return un tableau associatif de clé un mois -aaaamm- et de valeurs l'année et le mois correspondant 
 */
 	public function getLesMoisDisponiblesComptable(){
-		$req = "SELECT DISTINCT L.mois AS mois
-		FROM fichefrais F, lignefraisforfait L
-		WHERE F.idvisiteur = L.idvisiteur
-		AND L.mois NOT IN (SELECT DISTINCT L.mois 
-						FROM fichefrais F, lignefraisforfait L
-						WHERE F.idvisiteur = L.idvisiteur
-						AND (quantite = 0
-						OR idEtat = 'CR'))
+		$req = "SELECT DISTINCT mois
+		FROM fichefrais
+		WHERE mois IN (SELECT DISTINCT mois
+						FROM lignefraisforfait L
+						WHERE quantite > 0)
+		AND idEtat != 'CR'
 		ORDER BY mois DESC";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesMois =array();
@@ -466,7 +464,14 @@ class PdoGsb{
 		}
 		return $lesVisiteurs;
 	}
-	
+
+/**
+ * Retourne les informations d'une fiche de frais d'un visiteur pour un mois donné
+ 
+ * @param $idVisiteur 
+ * @param $mois sous la forme aaaamm
+ * @return un tableau avec des champs de jointure entre une fiche de frais et la ligne d'état
+ */
 	public function getLesFichesMoisPrecedent($idVisiteur, $mois) {
 		$req = "SELECT ficheFrais.idEtat as idEtat, ficheFrais.dateModif as dateModif, ficheFrais.nbJustificatifs as nbJustificatifs, 
 			ficheFrais.montantValide as montantValide, etat.libelle as libEtat 
@@ -480,6 +485,21 @@ class PdoGsb{
 		$st->execute();
 		$laLigne = $st->fetch();
 		return $laLigne;
+	}
+
+/**
+ * Met à jour la ligne frais hors forfait si celle ci est refusée
+ 
+ * @param $id de ligne frais hors forfait
+ * @param $lib
+ */	
+	public function majHorsForfait($id, $lib) {
+		$refus = "Refusé : " . $lib;
+		$req = "UPDATE lignehorsforfait SET libelle = ? where id = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $refus);
+		$st->bindParam(2, $id);
+		$st->execute();
 	}
 }
 ?> 

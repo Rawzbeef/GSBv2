@@ -548,7 +548,14 @@ class PdoGsb{
 		$st->bindParam(3, $mois);
 		$st->execute();
 	}
-	
+
+/**
+ * Retourne les montants des lignes hors forfaits valides
+ 
+ * @param $idVisiteur
+ * @param $mois sous forme aaaamm
+ * @return $lesMontants hors forfaits valides
+ */			
 	public function getLesMontantsHorsForfaitValides($idVisiteur, $mois) {
 		$req = "SELECT id, montant
 				FROM lignefraishorsforfait

@@ -236,6 +236,14 @@ function nbErreurs(){
 	}
 }
 
+/**
+ * Calcul le montant total valide 
+ 
+ * @param $tabMontant : montant des frais forfaits
+ * @param $tabQuantite : quantité des frais forfaits 
+ * @param $tabHorsForfait : contient les montants des lignes hors forfait validées
+ * @return $total
+ */
 function calculMontantValide($tabMontant, $tabQuantite, $tabHorsForfait) {
 	$total = 0;
 	for ($i = 0; $i < sizeof($tabMontant); $i++) {

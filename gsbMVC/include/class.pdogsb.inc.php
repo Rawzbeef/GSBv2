@@ -363,6 +363,7 @@ class PdoGsb{
 		$laLigne = $st->fetch();
 		return $laLigne;
 	}
+	
 /**
  * Modifie l'état et la date de modification d'une fiche de frais
  
@@ -495,11 +496,109 @@ class PdoGsb{
  */	
 	public function majHorsForfait($id, $lib) {
 		$refus = "Refusé : " . $lib;
-		$req = "UPDATE lignehorsforfait SET libelle = ? where id = ?";
+		$req = "UPDATE lignefraishorsforfait SET libelle = ? where id = ?";
 		$st = PdoGsb::$monPdo->prepare($req);
 		$st->bindParam(1, $refus);
 		$st->bindParam(2, $id);
 		$st->execute();
 	}
+
+/**
+ * Retourne les id et les montants des frais forfaits
+ 
+ * @return un tableau des 2 champs
+ */		
+	public function getMontantFraisForfait() {
+		$req = "SELECT id, montant
+				FROM fraisforfait
+				ORDER BY id";
+		$st = PdoGsb::$monPdo->query($req);
+		$lesMontants = array();
+		$laLigne = $st->fetch();
+		$i = 0;
+		while($laLigne != null)	{
+			$id = $laLigne['id'];
+			$montant = $laLigne['montant'];
+			$lesMontants["$i"]=array(
+		    "id"=>"$id",
+		    "montant"  => "$montant"
+			);
+			$laLigne = $st->fetch(); 
+			$i++;
+		}
+		return $lesMontants;
+		
+	}
+
+/**
+ * Met à jour le montant valide d'une fiche de frais d'un visiteur à un mois donné
+ 
+ * @param $idVisiteur
+ * @param $mois sous forme aaaamm
+ * @param $montant
+ */		
+	public function majMontantValide($idVisiteur, $mois, $montant) {
+		$req = "UPDATE fichefrais
+				SET montantValide = ?
+				WHERE idVisiteur = ?
+				AND mois = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $montant);
+		$st->bindParam(2, $idVisiteur);
+		$st->bindParam(3, $mois);
+		$st->execute();
+	}
+	
+	public function getLesMontantsHorsForfaitValides($idVisiteur, $mois) {
+		$req = "SELECT id, montant
+				FROM lignefraishorsforfait
+				WHERE libelle NOT LIKE 'Refusé :%'
+				AND idVisiteur = ?
+				AND mois = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$st->execute();
+		$lesMontants = array();
+		$laLigne = $st->fetch();
+		$i = 0;
+		while($laLigne != null)	{
+			$id = $laLigne['id'];
+			$montant = $laLigne['montant'];
+			$lesMontants["$i"]=array(
+		    "id"=>"$id",
+		    "montant"  => "$montant"
+			);
+			$laLigne = $st->fetch();
+			$i++;
+		}
+		return $lesMontants;
+	}
+	
+/**
+ * Retourne sous forme d'un tableau associatif toutes les lignes de frais hors forfait non refusées
+ * concernées par les deux arguments
+ 
+ * @param $idVisiteur 
+ * @param $mois sous la forme aaaamm
+ * @return tous les champs des lignes de frais hors forfait sous la forme d'un tableau associatif 
+*/
+	public function getLesFraisHorsForfaitValides($idVisiteur,$mois){
+	    $req = "select * from lignefraishorsforfait 
+				where lignefraishorsforfait.idvisiteur = ? 
+				and lignefraishorsforfait.mois = ?
+				and libelle not like 'Refusé :%'";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $idVisiteur);
+		$st->bindParam(2, $mois);
+		$st->execute();
+		$lesLignes = $st->fetchAll();
+		$nbLignes = count($lesLignes);
+		for ($i=0; $i<$nbLignes; $i++){
+			$date = $lesLignes[$i]['date'];
+			$lesLignes[$i]['date'] = dateAnglaisVersFrancais($date);
+		}
+		return $lesLignes; 
+	}	
 }
 ?> 

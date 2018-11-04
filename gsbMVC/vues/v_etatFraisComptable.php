@@ -61,8 +61,8 @@
 						<td><?php echo $montant ?></td>
 						<td>
 							<select id="lstSituation<?php echo$i;?>" name="lstSituation<?php echo$i;?>">
-								<option value="VL">Validée</option> 
-								<option value="RF" selected>Refusée</option>   	
+								<option value="VL" selected>Validée</option> 
+								<option value="RF">Refusée</option>   	
 							</select>
 						</td>
 					 </tr>

@@ -235,4 +235,16 @@ function nbErreurs(){
 	   return count($_REQUEST['erreurs']);
 	}
 }
+
+function calculMontantValide($tabMontant, $tabQuantite, $tabHorsForfait) {
+	$total = 0;
+	for ($i = 0; $i < sizeof($tabMontant); $i++) {
+		$montant = $tabMontant[$i]["montant"] * $tabQuantite[$i]["quantite"];
+		$total = $total + $montant;
+	}
+	foreach ($tabHorsForfait as $unMontantHF) {
+		$total = $total + $unMontantHF["montant"];
+	}
+	return $total;
+}
 ?>

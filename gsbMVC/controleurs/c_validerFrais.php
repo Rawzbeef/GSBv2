@@ -50,7 +50,7 @@ switch($action){
 		include("vues/v_listeVisiteurs.php");
 		$idVisiteur = $leVisiteur;
 		$_SESSION['visiteur'] = $idVisiteur;
-		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
+		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfaitValides($idVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
 		$lesInfosFicheFrais = $pdo->getLesFichesMoisPrecedent($idVisiteur,$leMois);
 		$numAnnee =substr( $leMois,0,4);
@@ -77,7 +77,7 @@ switch($action){
 		$idEtat = $_REQUEST['lstEtat'];
 		$pdo->majEtatFicheFrais($leVisiteur,$leMois,$idEtat);
 		// Mise à jour refus hors forfait si existant
-		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($leVisiteur,$leMois);
+		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfaitValides($leVisiteur,$leMois);
 		$nbHorsForfait = sizeof($lesFraisHorsForfait);
 		$i = 0;
 		foreach ( $lesFraisHorsForfait as $unFraisHorsForfait ) {
@@ -85,14 +85,18 @@ switch($action){
 			$liste = "lstSituation".$i;
 			$idHF = $unFraisHorsForfait['id'];
 			$libHF = $unFraisHorsForfait['libelle'];
-			echo $idHF;
-			echo $libHF;
-			echo $_REQUEST[$liste];
 			if ($_REQUEST[$liste] == "RF") {
 				$pdo->majHorsForfait($idHF, $libHF);
 			}
 		}
+		// Mise à jour du montant validé
+		$lesMontantsFraisForfait = $pdo->getMontantFraisForfait();
+		$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);
+		$lesMontantsHorsForfait = $pdo->getLesMontantsHorsForfaitValides($leVisiteur,$leMois);
+		$leMontant = calculMontantValide($lesMontantsFraisForfait, $lesFraisForfait, $lesMontantsHorsForfait);
+		$t = $pdo->majMontantValide($leVisiteur, $mois, $leMontant);
 		// Affichage
+		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfaitValides($leVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);
 		$lesInfosFicheFrais = $pdo->getLesFichesMoisPrecedent($leVisiteur,$leMois);
 		$numAnnee =substr( $leMois,0,4);

@@ -22,9 +22,12 @@
 				<tr>
 				<?php
 				foreach ($lesFraisForfait as $unFraisForfait) {
-						$quantite = $unFraisForfait['quantite'];
+					$idFrais = $unFraisForfait["idfrais"];
+					$quantite = $unFraisForfait['quantite'];
 				?>
-					<td class="qteForfait"><?php echo $quantite?> </td>
+					<td class="qteForfait">
+						<input class="tailleInput" type="text" name="<?php echo $idFrais;?>" value="<?php echo $quantite;?>"> 
+					</td>
 				<?php
 				  }
 				?>

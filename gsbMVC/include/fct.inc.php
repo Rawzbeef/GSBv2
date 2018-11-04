@@ -253,6 +253,7 @@ function calculMontantValide($tabMontant, $tabQuantite, $tabHorsForfait) {
 	foreach ($tabHorsForfait as $unMontantHF) {
 		$total = $total + $unMontantHF["montant"];
 	}
+	echo $total;
 	return $total;
 }
 ?>

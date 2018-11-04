@@ -606,6 +606,20 @@ class PdoGsb{
 			$lesLignes[$i]['date'] = dateAnglaisVersFrancais($date);
 		}
 		return $lesLignes; 
-	}	
+	}
+	
+	public function majQteFraisForfait($idVisiteur, $mois, $idF, $qte) {
+		$req = "UPDATE lignefraisforfait 
+				SET quantite = ? 
+				WHERE idFraisForfait = ?
+				AND idVisiteur = ?
+				AND mois = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $qte);
+		$st->bindParam(2, $idF);
+		$st->bindParam(3, $idVisiteur);
+		$st->bindParam(4, $mois);
+		$st->execute();
+	}
 }
 ?> 

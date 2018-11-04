@@ -76,6 +76,13 @@ switch($action){
 		// Mise à jour état fiche frais
 		$idEtat = $_REQUEST['lstEtat'];
 		$pdo->majEtatFicheFrais($leVisiteur,$leMois,$idEtat);
+		// Mise à jour des quantités des frais forfait
+		$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);
+		foreach ($lesFraisForfait as $unFraisForfait) {
+			$idF = $unFraisForfait["idfrais"];
+			$qte = $_REQUEST[$idF];
+			$pdo->majQteFraisForfait($leVisiteur, $leMois, $idF, $qte);
+		}
 		// Mise à jour refus hors forfait si existant
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfaitValides($leVisiteur,$leMois);
 		$nbHorsForfait = sizeof($lesFraisHorsForfait);
@@ -90,11 +97,14 @@ switch($action){
 			}
 		}
 		// Mise à jour du montant validé
-		$lesMontantsFraisForfait = $pdo->getMontantFraisForfait();
-		$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);
-		$lesMontantsHorsForfait = $pdo->getLesMontantsHorsForfaitValides($leVisiteur,$leMois);
-		$leMontant = calculMontantValide($lesMontantsFraisForfait, $lesFraisForfait, $lesMontantsHorsForfait);
-		$t = $pdo->majMontantValide($leVisiteur, $mois, $leMontant);
+		$lEtat = $_REQUEST["lstEtat"];
+		if($lEtat == "RB" || $lEtat == "VA") {
+			$lesMontantsFraisForfait = $pdo->getMontantFraisForfait();
+			$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);
+			$lesMontantsHorsForfait = $pdo->getLesMontantsHorsForfaitValides($leVisiteur,$leMois);
+			$leMontant = calculMontantValide($lesMontantsFraisForfait, $lesFraisForfait, $lesMontantsHorsForfait);
+			$pdo->majMontantValide($leVisiteur, $mois, $leMontant);
+		}
 		// Affichage
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfaitValides($leVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);

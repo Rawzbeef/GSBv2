@@ -155,6 +155,9 @@ form {
 	padding: 0 .5em 0 0;
 	line-height: 1.8;	
 }
+.tailleInput {
+	width:120px;
+}
 input, button, textarea, select{
   font-family:"Trebuchet MS", sans-serif;
   font-size : 1em;

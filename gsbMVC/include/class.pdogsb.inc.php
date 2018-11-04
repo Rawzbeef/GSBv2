@@ -621,5 +621,14 @@ class PdoGsb{
 		$st->bindParam(4, $mois);
 		$st->execute();
 	}
+
+	public function getleVisiteur($id) {
+		$req = "SELECT id, nom, prenom FROM Employe WHERE Employe.id = ?";
+		$st = PdoGsb::$monPdo->prepare($req);
+		$st->bindParam(1, $id);
+		$st->execute();
+		$leVisiteur = $st->fetch();
+		return $leVisiteur;
+	}
 }
 ?> 

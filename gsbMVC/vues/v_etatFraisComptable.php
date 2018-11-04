@@ -43,15 +43,34 @@
 					$libelle = $unFraisHorsForfait['libelle'];
 					$montant = $unFraisHorsForfait['montant'];
 				?>
-					 <tr>
+					<tr>
 						<td><?php echo $date ?></td>
 						<td><?php echo $libelle ?></td>
 						<td><?php echo $montant ?></td>
-					 </tr>
+					</tr>
 				<?php 
 				  }
 				?>
 			</table>
+			<form action="vues/v_pdf.php" method="post">
+				<?php
+					$_SESSION['nomVisiteur'] = $nomVisiteur;
+					$_SESSION['prenomVisiteur'] = $prenomVisiteur;
+
+					$_SESSION['numMois'] = $numMois;
+					$_SESSION['numAnnee'] = $numAnnee;
+
+					$_SESSION['libEtat'] = $libEtat;
+					$_SESSION['dateModif'] = $dateModif;
+
+					$_SESSION['montantValide'] = $montantValide;
+
+					$_SESSION['lesFraisForfait'] = $lesFraisForfait;
+					$_SESSION['nbJustificatifs'] = $nbJustificatifs;
+					$_SESSION['lesFraisHorsForfait'] = $lesFraisHorsForfait;
+				?>
+				<input type="submit" name="" value="Version PDF">
+			</form>
 		</div>
 	
 	</form>

@@ -48,8 +48,11 @@ switch($action){
 		$visiteurASelectionner = $leVisiteur;
 		include("vues/v_listeVisiteursConsult.php");
 		$idVisiteur = $leVisiteur;
+		$employe = $pdo->getleVisiteur($idVisiteur);
+		$nomVisiteur = $employe['nom'];
+		$prenomVisiteur = $employe['prenom'];
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
-		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
+		$lesFraisForfait = $pdo->getLesFraisForfait($idVisiteur,$leMois);
 		$lesInfosFicheFrais = $pdo->getLesFichesMoisPrecedent($idVisiteur,$leMois);
 		$numAnnee =substr( $leMois,0,4);
 		$numMois =substr( $leMois,4,2);

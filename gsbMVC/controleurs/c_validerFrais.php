@@ -60,7 +60,7 @@ switch($action){
 		$nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
 		$dateModif =  $lesInfosFicheFrais['dateModif'];
 		$dateModif =  dateAnglaisVersFrancais($dateModif);
-		include("vues/v_etatFraisComptable.php");
+		include("vues/v_validerFraisComptable.php");
 		break;
 	}
 	
@@ -116,7 +116,7 @@ switch($action){
 		$nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
 		$dateModif =  $lesInfosFicheFrais['dateModif'];
 		$dateModif =  dateAnglaisVersFrancais($dateModif);
-		include("vues/v_etatFraisComptable.php");
+		include("vues/v_validerFraisComptable.php");
 		break;
 	}
 }

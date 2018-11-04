@@ -16,6 +16,9 @@
 			<a href="index.php?uc=validerFrais&action=selectionnerMois" title="Validation des fiches de frais">Validation des fiches de frais</a>
 		</li>
 		<li class="smenu">
+			<a href="index.php?uc=etatFraisComptable&action=selectionnerMois" title="Consultation des fiches de frais">Consultation des fiches de frais</a>
+		</li>
+		<li class="smenu">
 			<a href="index.php?uc=connexion&action=deconnexion" title="Se déconnecter">Déconnexion</a>
 		</li>
 	</ul>

@@ -103,7 +103,7 @@ switch($action){
 			$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);
 			$lesMontantsHorsForfait = $pdo->getLesMontantsHorsForfaitValides($leVisiteur,$leMois);
 			$leMontant = calculMontantValide($lesMontantsFraisForfait, $lesFraisForfait, $lesMontantsHorsForfait);
-			$pdo->majMontantValide($leVisiteur, $mois, $leMontant);
+			$pdo->majMontantValide($leVisiteur, $leMois, $leMontant);
 		}
 		// Affichage
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfaitValides($leVisiteur,$leMois);

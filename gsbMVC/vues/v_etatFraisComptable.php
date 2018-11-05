@@ -52,7 +52,7 @@
 				  }
 				?>
 			</table>
-			<form action="vues/v_pdf.php" method="post">
+			<form target="_blank" action="vues/v_pdf.php" method="post">
 				<?php
 					$_SESSION['nomVisiteur'] = $nomVisiteur;
 					$_SESSION['prenomVisiteur'] = $prenomVisiteur;

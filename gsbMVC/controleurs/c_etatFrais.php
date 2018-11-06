@@ -25,6 +25,9 @@ switch($action){
 		$lesMois=$pdo->getLesMoisDisponibles($idVisiteur);
 		$moisASelectionner = $leMois;
 		include("vues/v_listeMois.php");
+		$employe = $pdo->getleVisiteur($idVisiteur);
+		$nomVisiteur = $employe['nom'];
+		$prenomVisiteur = $employe['prenom'];
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
 		$lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);

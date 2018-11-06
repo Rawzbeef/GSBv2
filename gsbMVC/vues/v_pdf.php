@@ -10,7 +10,7 @@
             $this->Cell(40,10,'Fiche De Frais',1,0,'C');
             $this->Ln(20);
             $this->SetFont('Arial','',15);
-            $this->Cell(65,10,$_SESSION['nomVisiteur']." ".$_SESSION['prenomVisiteur']." - Le ".$_SESSION['numMois']."/".$_SESSION['numAnnee'],1,0,'C');
+            $this->Cell(65,10,$_SESSION['nomVisiteur']." ".$_SESSION['prenomVisiteur']." - Le ".$_SESSION['numMois']."/".$_SESSION['numAnnee'],0,0);
             $this->Ln(20);
         }
     }

@@ -28,6 +28,7 @@ switch($action){
 				include("vues/v_sommaire_V.php");
 			}
 			else {
+				include("vues/v_bodyValidation.php");
 				include("vues/v_sommaire_C.php");
 			}
 			$pdo->autoCloturation();

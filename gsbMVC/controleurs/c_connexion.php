@@ -1,4 +1,5 @@
 ﻿<?php
+
 if(!isset($_REQUEST['action'])){
 	$_REQUEST['action'] = 'demandeConnexion';
 }
@@ -18,6 +19,7 @@ switch($action){
 			include("vues/v_connexion.php");
 		}
 		else{
+			$_SESSION['connecte'] = 1;
 			$id = $visiteur['id'];
 			$nom =  $visiteur['nom'];
 			$prenom = $visiteur['prenom'];
@@ -31,6 +33,9 @@ switch($action){
 			$pdo->autoCloturation();
 		}
 		break;
+	}
+	case 'deconnexion':{
+		session_destroy();
 	}
 	default :{
 		include("vues/v_connexion.php");

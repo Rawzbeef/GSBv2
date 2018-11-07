@@ -1,5 +1,10 @@
 <?php
 $idVisiteur = $_SESSION['idVisiteur'];
+
+if(!isset($_SESSION['connecte'])) {
+	include("vues/v_connexion.php");
+}
+
 if($pdo->getStatut($idVisiteur) == "Visiteur") {
 	include("vues/v_sommaire_V.php");
 }

@@ -607,7 +607,14 @@ class PdoGsb{
 		}
 		return $lesLignes; 
 	}
-	
+/**
+ * Met à jour la quantité d'une fiche de frais d'un visiteur à un mois donné
+ 
+ * @param $idVisiteur
+ * @param $mois sous forme aaaamm
+ * @param $idF : l'id de la fiche de frais
+ * @param $qte à mettre à jour
+ */			
 	public function majQteFraisForfait($idVisiteur, $mois, $idF, $qte) {
 		$req = "UPDATE lignefraisforfait 
 				SET quantite = ? 
@@ -621,7 +628,12 @@ class PdoGsb{
 		$st->bindParam(4, $mois);
 		$st->execute();
 	}
-
+/**
+ * Retourne les informations d'un visiteur
+ 
+ * @param $idVisiteur
+ * @return $leVisiteur
+ */	
 	public function getleVisiteur($id) {
 		$req = "SELECT id, nom, prenom FROM Employe WHERE Employe.id = ?";
 		$st = PdoGsb::$monPdo->prepare($req);

@@ -382,6 +382,12 @@ class PdoGsb{
 		$st->execute();
 	}
 
+	/**
+	 * renvoie le statut de l'employé qui possède tel $idVisiteur
+	 
+	 * @param $idVisiteur
+	 * @return le statut sou forme de chaine de caractère
+	 */
 	public function getStatut($idVisiteur){
 		$req = "SELECT statut FROM Employe WHERE id = ?";
 		$st = PdoGsb::$monPdo->prepare($req);
@@ -391,7 +397,12 @@ class PdoGsb{
 		return $laLigne['statut'];
 	}
 
-
+	/**
+	 * Détermine si le mois mit en paramètre est à cloturé
+	 
+	 * @param $mois sous la forme aaaamm
+	 * @return true ou false
+	 */
 	public function estACloturer($mois) {
 		//Annee et mois de la fiche frais
 		$moisFichefrais = $mois;
@@ -426,6 +437,9 @@ class PdoGsb{
 		return $bool;
 	}
 
+	/**
+	 * Cloture tout les frais à cloturer selon la méthode estACloturer($mois);
+	 */
 	public function autoCloturation() {
 		$req = "SELECT idVisiteur as id, mois 
 		FROM fichefrais 
@@ -608,6 +622,15 @@ class PdoGsb{
 		return $lesLignes; 
 	}
 	
+	/**
+	 * Met à jour le champ quantité de lignefraisforfait correspondant au fraisforfait sélectionné pour
+	 * ce visiteur sur un mois choisi
+	 
+	 * @param $idVisiteur 
+	 * @param $mois sous la forme aaaamm
+	 * @param $idF
+	 * @param $qte
+	 */
 	public function majQteFraisForfait($idVisiteur, $mois, $idF, $qte) {
 		$req = "UPDATE lignefraisforfait 
 				SET quantite = ? 
@@ -622,6 +645,12 @@ class PdoGsb{
 		$st->execute();
 	}
 
+	/**
+	 * Récupère un visiteur selon l'id fournis
+	 
+	 * @param $id
+	 * @return tableau contenant ce que renvoie la requete
+	 */
 	public function getleVisiteur($id) {
 		$req = "SELECT id, nom, prenom FROM Employe WHERE Employe.id = ?";
 		$st = PdoGsb::$monPdo->prepare($req);

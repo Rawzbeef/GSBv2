@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `Employe` (
   `nom` char(30) DEFAULT NULL,
   `prenom` char(30)  DEFAULT NULL, 
   `login` char(20) DEFAULT NULL,
-  `mdp` char(20) DEFAULT NULL,
+  `mdp` char(150) DEFAULT NULL,
   `adresse` char(30) DEFAULT NULL,
   `cp` char(5) DEFAULT NULL,
   `ville` char(30) DEFAULT NULL,

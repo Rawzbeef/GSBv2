@@ -1,5 +1,5 @@
 <?php
-$action = $_REQUEST['action'];
+$action = htmlspecialchars($_REQUEST['action']);
 $idVisiteur = $_SESSION['idVisiteur'];
 
 if(!isset($_SESSION['connecte'])) {
@@ -32,7 +32,7 @@ switch($action){
 		break;
 	}
 	case 'choixVisiteur':{
-		$leMois = $_REQUEST['lstMois'];
+		$leMois = htmlspecialchars($_REQUEST['lstMois']);
 		$_SESSION['mois'] = $leMois;
 		$lesMois=$pdo->getLesMoisDisponiblesComptable();
 		$moisASelectionner = $leMois;
@@ -49,7 +49,7 @@ switch($action){
 		$lesMois=$pdo->getLesMoisDisponiblesComptable();
 		$moisASelectionner = $leMois;
 		include("vues/v_listeMoisComptable.php");
-		$leVisiteur = $_REQUEST['lstVisiteur'];
+		$leVisiteur = htmlspecialchars($_REQUEST['lstVisiteur']);
 		$lesVisiteurs=$pdo->getLesVisiteurs($leMois);
 		$visiteurASelectionner = $leVisiteur;
 		include("vues/v_listeVisiteurs.php");
@@ -79,13 +79,13 @@ switch($action){
 		$visiteurASelectionner = $leVisiteur;
 		include("vues/v_listeVisiteurs.php");
 		// Mise à jour état fiche frais
-		$idEtat = $_REQUEST['lstEtat'];
+		$idEtat = htmlspecialchars($_REQUEST['lstEtat']);
 		$pdo->majEtatFicheFrais($leVisiteur,$leMois,$idEtat);
 		// Mise à jour des quantités des frais forfait
 		$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);
 		foreach ($lesFraisForfait as $unFraisForfait) {
 			$idF = $unFraisForfait["idfrais"];
-			$qte = $_REQUEST[$idF];
+			$qte = htmlspecialchars($_REQUEST[$idF]);
 			$pdo->majQteFraisForfait($leVisiteur, $leMois, $idF, $qte);
 		}
 		// Mise à jour refus hors forfait si existant
@@ -102,7 +102,7 @@ switch($action){
 			}
 		}
 		// Mise à jour du montant validé
-		$lEtat = $_REQUEST["lstEtat"];
+		$lEtat = htmlspecialchars($_REQUEST["lstEtat"]);
 		if($lEtat == "RB" || $lEtat == "VA") {
 			$lesMontantsFraisForfait = $pdo->getMontantFraisForfait();
 			$lesFraisForfait= $pdo->getLesFraisForfait($leVisiteur,$leMois);

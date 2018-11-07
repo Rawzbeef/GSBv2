@@ -31,7 +31,7 @@ switch($action){
 		break;
 	}
 	case 'choixVisiteur':{
-		$leMois = $_REQUEST['lstMois'];
+		$leMois = htmlspecialchars($_REQUEST['lstMois']);
 		$_SESSION['mois'] = $leMois;
 		$lesMois=$pdo->getLesMoisDisponiblesComptable();
 		$moisASelectionner = $leMois;
@@ -47,7 +47,7 @@ switch($action){
 		$lesMois=$pdo->getLesMoisDisponiblesComptable();
 		$moisASelectionner = $leMois;
 		include("vues/v_listeMoisComptableConsult.php");
-		$leVisiteur = $_REQUEST['lstVisiteur'];
+		$leVisiteur = htmlspecialchars($_REQUEST['lstVisiteur']);
 		$lesVisiteurs=$pdo->getLesVisiteurs($leMois);
 		$visiteurASelectionner = $leVisiteur;
 		include("vues/v_listeVisiteursConsult.php");

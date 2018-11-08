@@ -23,7 +23,7 @@ switch($action){
 		break;
 	}
 	case 'validerMajFraisForfait':{
-		$lesFrais = htmlspecialchars($_REQUEST['lesFrais']);
+		$lesFrais = $_REQUEST['lesFrais'];
 		if(lesQteFraisValides($lesFrais)){
 	  	 	$pdo->majFraisForfait($idVisiteur,$mois,$lesFrais);
 		}
